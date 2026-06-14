@@ -7,40 +7,32 @@ const games = [
   { opponent: 'BlitzRaven', result: 'Draw', date: 'Jun 2' },
 ]
 
+const resultStyles = {
+  Win: 'text-emerald-600',
+  Loss: 'text-red-500',
+  Draw: 'text-gold-500',
+}
+
 export default function RecentGames() {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.75, ease: 'easeOut' }}
-      className="rounded-[32px] border border-white/10 bg-slate-950/70 p-6 shadow-glow backdrop-blur-xl"
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="flex items-center justify-between gap-4 pb-4">
-        <div>
-          <p className="text-sm uppercase tracking-[0.35em] text-slate-500">Recent Games</p>
-          <h3 className="text-xl font-semibold text-white">Opponent Results</h3>
-        </div>
-        <span className="rounded-3xl bg-white/5 px-3 py-2 text-xs uppercase tracking-[0.25em] text-slate-300">
-          4 Matches
-        </span>
-      </div>
+      <span className="section-label">Recent Games</span>
 
-      <div className="space-y-3">
+      <div className="space-y-1">
         {games.map((game) => (
-          <div key={game.opponent} className="rounded-3xl border border-white/10 bg-white/5 px-4 py-4 text-sm text-slate-200 transition hover:border-gold/30 hover:bg-white/10">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="font-semibold text-white">{game.opponent}</p>
-                <p className="text-slate-400">vs opponent</p>
-              </div>
-              <div className="text-right">
-                <p className="font-semibold text-white">{game.date}</p>
-                <p className="text-slate-400 text-xs">Finished</p>
-              </div>
-            </div>
-            <div className="mt-4 inline-flex rounded-full bg-slate-900/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-300">
+          <div
+            key={game.opponent}
+            className="grid grid-cols-[1fr_3.5rem_4.5rem] items-center gap-4 border-b border-cream-200 py-3 font-sans text-sm transition hover:bg-cream-50"
+          >
+            <span className="font-medium text-espresso-500">{game.opponent}</span>
+            <span className={`text-xs font-semibold uppercase tracking-wider ${resultStyles[game.result]}`}>
               {game.result}
-            </div>
+            </span>
+            <span className="text-right text-espresso-300">{game.date}</span>
           </div>
         ))}
       </div>

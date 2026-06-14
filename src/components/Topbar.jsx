@@ -1,5 +1,11 @@
 import { motion } from 'framer-motion'
-import { Copy, Signal, UserCircle2 } from 'lucide-react'
+
+const navItems = [
+  { label: 'Play', href: '#' },
+  { label: 'History', href: '#' },
+  { label: 'Leaderboard', href: '#' },
+  { label: 'Settings', href: '#' },
+]
 
 export default function Topbar({ roomId }) {
   const handleCopy = () => {
@@ -10,37 +16,48 @@ export default function Topbar({ roomId }) {
 
   return (
     <motion.header
-      initial={{ opacity: 0, y: -20 }}
+      initial={{ opacity: 0, y: -16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
-      className="flex flex-col gap-4 rounded-[32px] border border-white/10 bg-slate-950/70 p-5 shadow-glow backdrop-blur-xl md:flex-row md:items-center md:justify-between"
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      className="border-b border-cream-200 bg-cream-50/80 backdrop-blur-sm"
     >
-      <div className="space-y-2">
-        <p className="text-sm uppercase tracking-[0.35em] text-slate-500">Current Room</p>
-        <div className="inline-flex items-center gap-3 rounded-3xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white shadow-inner">
-          <span className="text-gold">{roomId}</span>
+      <div className="mx-auto flex max-w-[1600px] items-center justify-between px-8 py-4">
+        <div className="flex items-center gap-10">
+          <a href="#" className="flex items-center gap-3">
+            <span className="flex h-8 w-8 items-center justify-center border border-gold-300 bg-gold-50 font-display text-sm text-gold-500">
+              ♟
+            </span>
+            <span className="font-display text-lg font-medium tracking-tight text-espresso-500">
+              CheckMate
+            </span>
+          </a>
+          <nav className="hidden items-center gap-8 md:flex">
+            {navItems.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                className="border-b border-transparent pb-0.5 font-sans text-sm font-medium text-espresso-400 transition hover:border-espresso-400 hover:text-espresso-500"
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
+        </div>
+
+        <div className="flex items-center gap-6">
           <button
             type="button"
             onClick={handleCopy}
-            className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-slate-900/70 px-3 py-2 text-xs uppercase tracking-[0.25em] text-slate-300 transition hover:bg-white/10"
+            className="flex items-center gap-2 font-sans text-sm text-espresso-400 transition hover:text-espresso-500"
           >
-            <Copy className="h-4 w-4" />
-            Copy Room
+            <span className="font-mono text-xs tracking-widest text-gold-400">{roomId}</span>
+            <span className="text-[10px] uppercase tracking-[0.15em]">Copy</span>
           </button>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-4">
-        <div className="inline-flex items-center gap-2 rounded-3xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200 shadow-inner">
-          <span className="inline-flex h-3.5 w-3.5 rounded-full bg-emerald-400" />
-          Online
-        </div>
-
-        <div className="inline-flex items-center gap-3 rounded-3xl border border-white/10 bg-white/5 px-4 py-3 shadow-inner">
-          <UserCircle2 className="h-5 w-5 text-gold" />
-          <div>
-            <p className="text-sm font-semibold text-white">Sasha Knight</p>
-            <p className="text-xs text-slate-400">Premium Member</p>
+          <div className="flex items-center gap-3 border-l border-cream-300 pl-6">
+            <span className="font-sans text-sm font-medium text-espresso-500">SK</span>
+            <span className="flex h-7 w-7 items-center justify-center border border-cream-300 bg-cream-100 font-sans text-[11px] font-medium text-espresso-400">
+              SK
+            </span>
           </div>
         </div>
       </div>

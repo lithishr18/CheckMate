@@ -1,4 +1,3 @@
-import Sidebar from './components/Sidebar.jsx'
 import Topbar from './components/Topbar.jsx'
 import ChessBoard from './components/ChessBoard.jsx'
 import PlayerCard from './components/PlayerCard.jsx'
@@ -26,18 +25,14 @@ function App() {
   const roomId = 'HC7Q9B'
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#05050a] text-slate-100">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top,_rgba(212,175,55,0.15),_transparent_25%)]" />
-      <div className="relative mx-auto max-w-[1700px] px-4 py-6 sm:px-6 lg:px-8">
-        <div className="grid gap-6 xl:grid-cols-[280px_minmax(0,1fr)_360px]">
-          <Sidebar />
+    <div className="min-h-screen bg-cream-100 text-espresso-500">
+      <Topbar roomId={roomId} />
 
-          <div className="space-y-6">
-            <Topbar roomId={roomId} />
-            <ChessBoard />
-          </div>
+      <main className="mx-auto max-w-[1600px] px-8 pb-16 pt-10">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
+          <ChessBoard />
 
-          <div className="space-y-6">
+          <div className="space-y-10">
             <PlayerCard {...whitePlayer} />
             <PlayerCard {...blackPlayer} />
             <GameStatus turn="White" status="Live Match" room={roomId} />
@@ -45,7 +40,7 @@ function App() {
             <RecentGames />
           </div>
         </div>
-      </div>
+      </main>
     </div>
   )
 }

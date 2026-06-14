@@ -3,36 +3,41 @@ import { motion } from 'framer-motion'
 export default function PlayerCard({ color, username, rating, timer, status }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.75, ease: 'easeOut' }}
-      className="rounded-[32px] border border-white/10 bg-slate-950/70 p-6 shadow-glow backdrop-blur-xl"
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      className="group"
     >
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <p className="text-sm uppercase tracking-[0.35em] text-slate-500">{color} Player</p>
-          <h3 className="text-xl font-semibold text-white">{username}</h3>
+      <div className="flex items-start justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <span
+              className={`inline-block h-2.5 w-2.5 rounded-full ${
+                color === 'White' ? 'border border-espresso-200 bg-cream-50' : 'bg-espresso-500'
+              }`}
+            />
+            <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-espresso-300">
+              {color}
+            </span>
+          </div>
+          <h3 className="font-display text-2xl font-medium italic leading-none text-espresso-500">
+            {username}
+          </h3>
         </div>
-        <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-gradient-to-br from-[#d4af37]/20 to-[#ffffff]/10 text-2xl font-semibold text-gold">
+        <div className="flex h-10 w-10 items-center justify-center border border-cream-300 bg-cream-100 font-display text-sm text-espresso-400">
           {username.charAt(0)}
         </div>
       </div>
-      <div className="mt-6 grid gap-3 rounded-3xl bg-white/5 p-4 text-sm text-slate-300">
-        <div className="flex items-center justify-between">
-          <span>Rating</span>
-          <span className="font-semibold text-white">{rating}</span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span>Timer</span>
-          <span className="font-semibold text-white">{timer}</span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span>Status</span>
-          <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300">
-            {status}
-          </span>
-        </div>
+      <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 font-sans text-sm text-espresso-400">
+        <span>
+          Rating <strong className="font-semibold text-espresso-500">{rating}</strong>
+        </span>
+        <span>
+          Timer <strong className="font-semibold text-espresso-500">{timer}</strong>
+        </span>
+        <span className="text-gold-400">{status}</span>
       </div>
+      <div className="mt-4 hairline" />
     </motion.div>
   )
 }

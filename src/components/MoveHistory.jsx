@@ -16,36 +16,30 @@ const moves = [
 export default function MoveHistory() {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.75, ease: 'easeOut' }}
-      className="rounded-[32px] border border-white/10 bg-slate-950/70 p-6 shadow-glow backdrop-blur-xl"
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="flex items-center justify-between gap-4 pb-4">
-        <div>
-          <p className="text-sm uppercase tracking-[0.35em] text-slate-500">Move History</p>
-          <h3 className="text-xl font-semibold text-white">Notation Log</h3>
-        </div>
-        <span className="rounded-3xl bg-white/5 px-3 py-2 text-xs uppercase tracking-[0.25em] text-slate-300">
-          Latest
+      <div className="mb-4 flex items-center justify-between">
+        <span className="section-label">Moves</span>
+        <span className="font-sans text-[10px] uppercase tracking-[0.2em] text-espresso-300">
+          10 moves
         </span>
       </div>
 
-      <div className="space-y-3 overflow-hidden rounded-3xl border border-white/10 bg-slate-900/80 p-3">
-        <div className="grid grid-cols-[56px_1fr_1fr] gap-3 px-3 py-2 text-xs uppercase tracking-[0.25em] text-slate-500">
-          <span>Move</span>
-          <span>White</span>
-          <span>Black</span>
-        </div>
-        <div className="max-h-72 space-y-2 overflow-y-auto pr-2">
-          {moves.map((entry) => (
-            <div key={entry.move} className="grid grid-cols-[56px_1fr_1fr] gap-3 rounded-3xl bg-white/5 px-3 py-3 text-sm text-slate-200 transition hover:bg-white/10">
-              <span className="font-semibold text-gold">{entry.move}.</span>
-              <span>{entry.white}</span>
-              <span>{entry.black}</span>
-            </div>
-          ))}
-        </div>
+      <div className="max-h-56 space-y-1 overflow-y-auto">
+        {moves.map((entry) => (
+          <div
+            key={entry.move}
+            className="grid grid-cols-[2rem_1fr_1fr] gap-2 border-b border-cream-200 py-1.5 font-mono text-sm transition hover:bg-cream-50"
+          >
+            <span className="text-right font-sans text-xs font-medium text-gold-400">
+              {entry.move}.
+            </span>
+            <span className="font-medium text-espresso-500">{entry.white}</span>
+            <span className="text-espresso-400">{entry.black}</span>
+          </div>
+        ))}
       </div>
     </motion.div>
   )

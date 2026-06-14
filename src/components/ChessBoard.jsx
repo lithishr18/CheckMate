@@ -2,70 +2,89 @@ import { motion } from 'framer-motion'
 
 const files = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
 const ranks = [8, 7, 6, 5, 4, 3, 2, 1]
+
 export default function ChessBoard() {
   return (
     <motion.section
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
-      className="space-y-6"
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className="space-y-8"
     >
-      <div className="rounded-[32px] border border-white/10 bg-slate-950/70 p-6 shadow-glow backdrop-blur-xl">
-        <div className="flex items-center justify-between gap-4 pb-5 text-slate-300">
-          <div>
-            <p className="text-sm uppercase tracking-[0.35em] text-slate-500">Live Match</p>
-            <h2 className="text-2xl font-semibold text-white">Grandmaster Arena</h2>
-          </div>
-          <p className="text-sm text-slate-400">Premium dark board · 10 min | 5 sec</p>
-        </div>
+      <div className="space-y-2">
+        <span className="section-label">Board</span>
+        <h2 className="font-display text-4xl font-medium leading-tight text-espresso-500">
+          Grandmaster Arena
+        </h2>
+      </div>
 
-        <div className="overflow-hidden rounded-[28px] border border-white/10 bg-slate-900/80 p-4 shadow-inner">
-          <div className="grid gap-2">
-            <div className="grid grid-cols-[24px_repeat(8,minmax(0,1fr))_24px] items-center text-center text-xs uppercase tracking-[0.35em] text-slate-500">
+      <div className="rounded-sm border border-cream-300 bg-cream-50 p-5 shadow-frame">
+        <div className="overflow-hidden rounded-[2px]">
+          <div className="grid">
+            <div className="grid grid-cols-[28px_repeat(8,minmax(0,1fr))_28px] items-center">
               <div />
-              {files.map((file) => (
-                <div key={file}>{file}</div>
+              {files.map((f) => (
+                <div key={f} className="pb-2 text-center font-sans text-[11px] font-medium uppercase tracking-[0.15em] text-espresso-300">
+                  {f}
+                </div>
               ))}
               <div />
             </div>
             {ranks.map((rank, rowIndex) => (
-              <div key={rank} className="grid grid-cols-[24px_repeat(8,minmax(0,1fr))_24px] items-center gap-2">
-                <div className="text-sm font-semibold text-slate-400">{rank}</div>
+              <div key={rank} className="grid grid-cols-[28px_repeat(8,minmax(0,1fr))_28px] items-center">
+                <div className="pr-2 text-right font-sans text-[11px] font-medium text-espresso-300">
+                  {rank}
+                </div>
                 {files.map((file, fileIndex) => {
                   const dark = (rowIndex + fileIndex) % 2 === 0
                   return (
                     <div
                       key={`${file}${rank}`}
-                      className={`aspect-square rounded-2xl border border-white/5 transition ${
-                        dark ? 'bg-slate-900/90' : 'bg-slate-700/80'
+                      className={`aspect-square transition-colors ${
+                        dark ? 'bg-board-light' : 'bg-board-dark'
                       }`}
                     />
                   )
                 })}
-                <div className="text-sm font-semibold text-slate-400">{rank}</div>
+                <div className="pl-2 text-left font-sans text-[11px] font-medium text-espresso-300">
+                  {rank}
+                </div>
               </div>
             ))}
-            <div className="grid grid-cols-[24px_repeat(8,minmax(0,1fr))_24px] items-center text-center text-xs uppercase tracking-[0.35em] text-slate-500">
+            <div className="grid grid-cols-[28px_repeat(8,minmax(0,1fr))_28px] items-center">
               <div />
-              {files.map((file) => (
-                <div key={file}>{file}</div>
+              {files.map((f) => (
+                <div key={f} className="pt-2 text-center font-sans text-[11px] font-medium uppercase tracking-[0.15em] text-espresso-300">
+                  {f}
+                </div>
               ))}
               <div />
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-3">
-          <button className="rounded-3xl border border-white/10 bg-slate-950/80 px-5 py-4 text-sm font-semibold uppercase tracking-[0.2em] text-slate-100 transition hover:bg-white/5">
-            Resign
-          </button>
-          <button className="rounded-3xl border border-white/10 bg-white/5 px-5 py-4 text-sm font-semibold uppercase tracking-[0.2em] text-slate-100 transition hover:bg-white/10">
-            Offer Draw
-          </button>
-          <button className="rounded-3xl bg-gradient-to-r from-[#d4af37] to-[#e5ce75] px-5 py-4 text-sm font-semibold uppercase tracking-[0.2em] text-slate-950 shadow-glow transition hover:from-[#f0d76d] hover:to-[#f8e190]">
-            New Game
-          </button>
-        </div>
+      <div className="flex gap-6">
+        <button
+          type="button"
+          className="group inline-flex items-center gap-2 border-b border-espresso-200 pb-0.5 font-sans text-sm font-medium text-espresso-500 transition hover:border-espresso-500"
+        >
+          <span className="inline-block h-0.5 w-4 bg-espresso-300 transition group-hover:w-6 group-hover:bg-espresso-500" />
+          Resign
+        </button>
+        <button
+          type="button"
+          className="group inline-flex items-center gap-2 border-b border-espresso-200 pb-0.5 font-sans text-sm font-medium text-espresso-400 transition hover:border-espresso-500 hover:text-espresso-500"
+        >
+          Offer Draw
+        </button>
+        <button
+          type="button"
+          className="ml-auto inline-flex items-center gap-2 rounded-none border border-gold-300 bg-gold-50 px-6 py-2.5 font-sans text-sm font-medium tracking-wide text-gold-500 transition hover:bg-gold-100 hover:text-espresso-500"
+        >
+          New Game
+          <span className="text-espresso-300">→</span>
+        </button>
       </div>
     </motion.section>
   )
