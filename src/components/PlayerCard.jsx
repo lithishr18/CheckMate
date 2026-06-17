@@ -1,19 +1,21 @@
 import { motion } from 'framer-motion'
 
-export default function PlayerCard({ color, username, rating, timer, status }) {
+export default function PlayerCard({ color, username, rating, timer, isActiveTurn }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      className="group"
+      className={`group transition-opacity ${isActiveTurn ? '' : 'opacity-60'}`}
     >
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span
               className={`inline-block h-2.5 w-2.5 rounded-full ${
-                color === 'White' ? 'border border-espresso-200 bg-cream-50' : 'bg-espresso-500'
+                color === 'White'
+                  ? 'border border-espresso-200 bg-cream-50'
+                  : 'bg-espresso-500'
               }`}
             />
             <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-espresso-300">
@@ -35,7 +37,9 @@ export default function PlayerCard({ color, username, rating, timer, status }) {
         <span>
           Timer <strong className="font-semibold text-espresso-500">{timer}</strong>
         </span>
-        <span className="text-gold-400">{status}</span>
+        <span className={isActiveTurn ? 'text-gold-400 font-medium' : 'text-espresso-300'}>
+          {isActiveTurn ? 'To move' : 'Waiting'}
+        </span>
       </div>
       <div className="mt-4 hairline" />
     </motion.div>
