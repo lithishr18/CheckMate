@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Topbar from './components/Topbar.jsx'
 import ChessBoard from './components/ChessBoard.jsx'
 import PlayerCard from './components/PlayerCard.jsx'
@@ -5,6 +6,7 @@ import MoveHistory from './components/MoveHistory.jsx'
 import GameStatus from './components/GameStatus.jsx'
 import RecentGames from './components/RecentGames.jsx'
 import useChessGame from './hooks/useChessGame.js'
+import useSocket from './hooks/useSocket.js'
 
 const whitePlayer = {
   username: 'SashaKnight',
@@ -19,7 +21,7 @@ const blackPlayer = {
 }
 
 function App() {
-  const roomId = 'HC7Q9B'
+  const [roomId] = useState('HC7Q9B')
   const {
     game,
     fen,
@@ -34,9 +36,19 @@ function App() {
     resign,
   } = useChessGame()
 
+  const { connected, room, error, createRoom, joinRoom, leaveRoom } = useSocket()
+
   return (
     <div className="min-h-screen bg-cream-100 text-espresso-500">
-      <Topbar roomId={roomId} />
+      <Topbar
+        roomId={room?.code || roomId}
+        connected={connected}
+        room={room}
+        onCreateRoom={createRoom}
+        onJoinRoom={joinRoom}
+        onLeaveRoom={leaveRoom}
+        error={error}
+      />
 
       <main className="mx-auto max-w-[1600px] px-8 pb-16 pt-10">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
@@ -66,7 +78,7 @@ function App() {
               {...blackPlayer}
               isActiveTurn={turn === 'b'}
             />
-            <GameStatus status={status} turn={turn} room={roomId} />
+            <GameStatus status={status} turn={turn} room={room?.code || roomId} />
             <MoveHistory history={history} />
             <RecentGames />
           </div>
