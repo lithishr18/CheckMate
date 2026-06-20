@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion'
 
-export default function PlayerCard({ color, username, rating, timer, isActiveTurn }) {
+export default function PlayerCard({ color, username, rating, timer, isActiveTurn, opponentConnected }) {
+  const isOpponentCard = opponentConnected !== null
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -38,9 +40,18 @@ export default function PlayerCard({ color, username, rating, timer, isActiveTur
           Timer <strong className="font-semibold text-espresso-500">{timer}</strong>
         </span>
         <span className={isActiveTurn ? 'text-gold-400 font-medium' : 'text-espresso-300'}>
-          {isActiveTurn ? 'To move' : 'Waiting'}
+          {isOpponentCard && opponentConnected === false
+            ? 'Disconnected'
+            : isActiveTurn
+              ? 'To move'
+              : 'Waiting'}
         </span>
       </div>
+      {isOpponentCard && opponentConnected === false && (
+        <div className="mt-2">
+          <span className="font-sans text-[10px] uppercase tracking-[0.2em] text-red-400">Opponent disconnected</span>
+        </div>
+      )}
       <div className="mt-4 hairline" />
     </motion.div>
   )

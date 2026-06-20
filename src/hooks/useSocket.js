@@ -1,68 +1,87 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { io } from 'socket.io-client'
-
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001'
-
 export default function useSocket() {
-  const socketRef = useRef(null)
+  const [socket, setSocket] = useState(null)
   const [connected, setConnected] = useState(false)
   const [room, setRoom] = useState(null)
   const [error, setError] = useState(null)
-
+  const [opponentConnected, setOpponentConnected] = useState(false)
   useEffect(() => {
-    const socket = io(SERVER_URL, {
+    const s = io(SERVER_URL, {
       transports: ['websocket', 'polling'],
     })
 
-    socket.on('connect', () => setConnected(true))
-    socket.on('disconnect', () => setConnected(false))
-    socket.on('connect_error', () => setConnected(false))
+    s.on('connect', () => setConnected(true))
+    s.on('disconnect', () => setConnected(false))
+    s.on('connect_error', () => setConnected(false))
 
-    socket.on('room-created', (data) => {
+    s.on('room-created', (data) => {
       setRoom({ code: data.code, color: data.color, players: data.players })
+      setOpponentConnected(false)
       setError(null)
     })
 
-    socket.on('room-joined', (data) => {
+    s.on('room-joined', (data) => {
       setRoom({ code: data.code, color: data.color, players: data.players })
+      setOpponentConnected(true)
       setError(null)
     })
 
-    socket.on('player-joined', (data) => {
+    s.on('player-joined', (data) => {
       setRoom((prev) => (prev ? { ...prev, players: data.players } : prev))
+      setOpponentConnected(true)
     })
 
-    socket.on('player-left', (data) => {
+    s.on('player-left', (data) => {
       setRoom((prev) => (prev ? { ...prev, players: data.players } : prev))
+      if (data.players.length < 2) {
+        setOpponentConnected(false)
+      }
     })
 
-    socket.on('room-left', () => {
+    s.on('opponent-disconnected', () => {
+      setOpponentConnected(false)
+    })
+
+    s.on('room-left', () => {
       setRoom(null)
+      setOpponentConnected(false)
     })
 
-    socket.on('error', (data) => {
+    s.on('error', (data) => {
       setError(data.message)
     })
-
-    socketRef.current = socket
+    setSocket(s)
 
     return () => {
-      socket.disconnect()
-      socketRef.current = null
+      s.disconnect()
     }
   }, [])
 
   const createRoom = useCallback(() => {
-    socketRef.current?.emit('create-room')
-  }, [])
+    socket?.emit('create-room')
+  }, [socket])
 
   const joinRoom = useCallback((code) => {
-    socketRef.current?.emit('join-room', { code })
-  }, [])
+    socket?.emit('join-room', { code })
+  }, [socket])
 
   const leaveRoom = useCallback(() => {
-    socketRef.current?.emit('leave-room')
-  }, [])
+    socket?.emit('leave-room')
+  }, [socket])
 
-  return { connected, room, error, createRoom, joinRoom, leaveRoom }
+  const playerColor = room?.color ?? null
+
+  return {
+    connected,
+    room,
+    error,
+    opponentConnected,
+    playerColor,
+    createRoom,
+    joinRoom,
+    leaveRoom,
+    socket,
+  }
 }

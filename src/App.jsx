@@ -22,21 +22,9 @@ const blackPlayer = {
 
 function App() {
   const [roomId] = useState('HC7Q9B')
-  const {
-    game,
-    fen,
-    turn,
-    history,
-    status,
-    selectedSquare,
-    legalDestinations,
-    lastMove,
-    selectSquare,
-    resetGame,
-    resign,
-  } = useChessGame()
+  const { connected, room, error, opponentConnected, playerColor, createRoom, joinRoom, leaveRoom, socket } = useSocket()
 
-  const { connected, room, error, createRoom, joinRoom, leaveRoom } = useSocket()
+  const { game, fen, turn, history, status, selectedSquare, legalDestinations, lastMove, selectSquare, resetGame, resign } = useChessGame({ socket, playerColor })
 
   return (
     <div className="min-h-screen bg-cream-100 text-espresso-500">
@@ -51,38 +39,62 @@ function App() {
       />
 
       <main className="mx-auto max-w-[1600px] px-8 pb-16 pt-10">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
-          <ChessBoard
-            game={game}
-            fen={fen}
-            turn={turn}
-            history={history}
-            status={status}
-            selectedSquare={selectedSquare}
-            legalDestinations={legalDestinations}
-            lastMove={lastMove}
-            onSquareClick={selectSquare}
-            onReset={resetGame}
-            onResign={resign}
-            onDraw={() => {}}
-          />
-
-          <div className="space-y-10">
-            <PlayerCard
-              color="White"
-              {...whitePlayer}
-              isActiveTurn={turn === 'w'}
-            />
-            <PlayerCard
-              color="Black"
-              {...blackPlayer}
-              isActiveTurn={turn === 'b'}
-            />
-            <GameStatus status={status} turn={turn} room={room?.code || roomId} />
-            <MoveHistory history={history} />
-            <RecentGames />
+        {!room && !connected && (
+          <div className="flex flex-col items-center justify-center pt-32">
+            <p className="font-sans text-sm text-espresso-400">Connecting to server...</p>
           </div>
-        </div>
+        )}
+
+        {!room && connected && (
+          <div className="flex flex-col items-center justify-center gap-4 pt-32">
+            <p className="font-display text-3xl text-espresso-400">Create or join a room</p>
+            <p className="font-sans text-sm text-espresso-300">Use the buttons in the top bar to get started</p>
+          </div>
+        )}
+
+        {room && (
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
+            <ChessBoard
+              game={game}
+              fen={fen}
+              turn={turn}
+              history={history}
+              status={status}
+              selectedSquare={selectedSquare}
+              legalDestinations={legalDestinations}
+              lastMove={lastMove}
+              onSquareClick={selectSquare}
+              onReset={resetGame}
+              onResign={resign}
+              onDraw={() => {}}
+            />
+
+            <div className="space-y-10">
+              <PlayerCard
+                color="White"
+                {...whitePlayer}
+                isActiveTurn={turn === 'w'}
+                opponentConnected={playerColor === 'b' ? opponentConnected : null}
+              />
+              <PlayerCard
+                color="Black"
+                {...blackPlayer}
+                isActiveTurn={turn === 'b'}
+                opponentConnected={playerColor === 'w' ? opponentConnected : null}
+              />
+              <GameStatus
+                status={status}
+                turn={turn}
+                room={room?.code || roomId}
+                opponentConnected={opponentConnected}
+                playerColor={playerColor}
+                roomPlayers={room?.players?.length ?? 0}
+              />
+              <MoveHistory history={history} />
+              <RecentGames />
+            </div>
+          </div>
+        )}
       </main>
     </div>
   )

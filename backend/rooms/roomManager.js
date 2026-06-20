@@ -20,7 +20,7 @@ export function createRoom(hostId) {
   const room = {
     code,
     hostId,
-    players: [{ id: hostId, color: 'w' }],
+    players: [{ id: hostId, color: 'w', connected: true }],
     createdAt: Date.now(),
   }
   rooms.set(code, room)
@@ -29,16 +29,10 @@ export function createRoom(hostId) {
 
 export function joinRoom(code, playerId) {
   const room = rooms.get(code)
-  if (!room) {
-    return { error: 'Room not found' }
-  }
-  if (room.players.length >= 2) {
-    return { error: 'Room is full' }
-  }
-  if (room.players.find((p) => p.id === playerId)) {
-    return { error: 'Already in this room' }
-  }
-  room.players.push({ id: playerId, color: 'b' })
+  if (!room) return { error: 'Room not found' }
+  if (room.players.length >= 2) return { error: 'Room is full' }
+  if (room.players.find((p) => p.id === playerId)) return { error: 'Already in this room' }
+  room.players.push({ id: playerId, color: 'b', connected: true })
   return { room }
 }
 
@@ -60,6 +54,14 @@ export function leaveRoom(code, playerId) {
   return room
 }
 
+export function setPlayerConnected(code, playerId, connected) {
+  const room = rooms.get(code)
+  if (!room) return null
+  const player = room.players.find((p) => p.id === playerId)
+  if (player) player.connected = connected
+  return room
+}
+
 export function getRoom(code) {
   return rooms.get(code) ?? null
 }
@@ -70,9 +72,7 @@ export function roomExists(code) {
 
 export function getPlayerRoom(playerId) {
   for (const room of rooms.values()) {
-    if (room.players.find((p) => p.id === playerId)) {
-      return room
-    }
+    if (room.players.find((p) => p.id === playerId)) return room
   }
   return null
 }

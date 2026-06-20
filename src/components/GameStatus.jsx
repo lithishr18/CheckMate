@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { formatGameStatus } from '../utils/chessHelpers.js'
 
-export default function GameStatus({ status, turn, room }) {
+export default function GameStatus({ status, turn, room, opponentConnected, playerColor, roomPlayers }) {
   const label = formatGameStatus(status)
   const isOver = status.type === 'checkmate' || status.type === 'stalemate' || status.type === 'draw'
 
@@ -20,7 +20,13 @@ export default function GameStatus({ status, turn, room }) {
               isOver ? 'bg-red-400' : status.type === 'check' ? 'bg-gold-400' : 'bg-gold-300'
             }`}
           />
-          <span className="font-medium text-espresso-500">{label}</span>
+          <span className="font-medium text-espresso-500">
+            {playerColor && roomPlayers < 2
+              ? 'Waiting for opponent'
+              : playerColor && opponentConnected === false
+                ? 'Opponent disconnected'
+                : label}
+          </span>
         </div>
         <div className="grid grid-cols-[6rem_1fr] gap-x-4 gap-y-1">
           <span className="text-espresso-300">Room</span>
