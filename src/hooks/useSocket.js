@@ -52,6 +52,7 @@ export default function useSocket() {
     s.on('error', (data) => {
       setError(data.message)
     })
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSocket(s)
 
     return () => {
