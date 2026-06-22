@@ -1,7 +1,16 @@
 import { motion } from 'framer-motion'
 
-export default function PlayerCard({ color, username, rating, timer, isActiveTurn, opponentConnected }) {
+export default function PlayerCard({
+  color,
+  username,
+  rating,
+  timer,
+  isActiveTurn,
+  opponentConnected,
+  isCurrentPlayer,
+}) {
   const isOpponentCard = opponentConnected !== null
+  const isWhite = color === 'White'
 
   return (
     <motion.div
@@ -11,18 +20,25 @@ export default function PlayerCard({ color, username, rating, timer, isActiveTur
       className={`group transition-opacity ${isActiveTurn ? '' : 'opacity-60'}`}
     >
       <div className="flex items-start justify-between gap-4">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span
-              className={`inline-block h-2.5 w-2.5 rounded-full ${
-                color === 'White'
-                  ? 'border border-espresso-200 bg-cream-50'
-                  : 'bg-espresso-500'
-              }`}
-            />
-            <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-espresso-300">
-              {color}
-            </span>
+        <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <span
+                className={`inline-block h-3 w-3 rounded-full border-2 ${
+                  isWhite
+                    ? 'border-espresso-300 bg-cream-50'
+                    : 'border-espresso-600 bg-espresso-500'
+                }`}
+              />
+              <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-espresso-300">
+                {color}
+              </span>
+            </div>
+            {isCurrentPlayer && (
+              <span className="rounded border border-gold-200 bg-gold-50 px-2 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-[0.15em] text-gold-500">
+                You
+              </span>
+            )}
           </div>
           <h3 className="font-display text-2xl font-medium italic leading-none text-espresso-500">
             {username}
@@ -34,12 +50,18 @@ export default function PlayerCard({ color, username, rating, timer, isActiveTur
       </div>
       <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 font-sans text-sm text-espresso-400">
         <span>
-          Rating <strong className="font-semibold text-espresso-500">{rating}</strong>
+          Rating{' '}
+          <strong className="font-semibold text-espresso-500">{rating}</strong>
         </span>
         <span>
-          Timer <strong className="font-semibold text-espresso-500">{timer}</strong>
+          Timer{' '}
+          <strong className="font-semibold text-espresso-500">{timer}</strong>
         </span>
-        <span className={isActiveTurn ? 'text-gold-400 font-medium' : 'text-espresso-300'}>
+        <span
+          className={
+            isActiveTurn ? 'font-medium text-gold-400' : 'text-espresso-300'
+          }
+        >
           {isOpponentCard && opponentConnected === false
             ? 'Disconnected'
             : isActiveTurn
@@ -48,8 +70,10 @@ export default function PlayerCard({ color, username, rating, timer, isActiveTur
         </span>
       </div>
       {isOpponentCard && opponentConnected === false && (
-        <div className="mt-2">
-          <span className="font-sans text-[10px] uppercase tracking-[0.2em] text-red-400">Opponent disconnected</span>
+        <div className="mt-3 rounded border border-red-200 bg-red-50 px-3 py-2">
+          <span className="font-sans text-[10px] font-semibold uppercase tracking-[0.2em] text-red-500">
+            Opponent disconnected
+          </span>
         </div>
       )}
       <div className="mt-4 hairline" />
